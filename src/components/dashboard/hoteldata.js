@@ -34,7 +34,9 @@ function Hoteldata() {
   useEffect(() => {
     async function fetchHotels() {
       try {
-        const response = await axios.get(`${frontend_url}/hotelroutes/hoteldetail`);
+        const response = await axios.get(`${frontend_url}/hotelroutes/hoteldetail`,{
+          withCredentials: true,
+        });
         setprice(response);
         setHotels(response.data.hotel);
         setLoading(false);

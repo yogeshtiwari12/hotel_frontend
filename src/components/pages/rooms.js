@@ -16,12 +16,13 @@ function Rooms() {
     const fetchRoomData = async () => {
       try {
         const response = await axios.get(
-          `${frontend_url}/hotelroutes/roomdetails_related_to_hotel/${id}`
+          `${frontend_url}/hotelroutes/roomdetails_related_to_hotel/${id}`,
+          {withCredentials: true}
         );
+        console.log('Room data:', response.data);
         if(response.data) {
-          toast.success("Room data loaded successfully!");
-        setRoomData(response.data.allroomdata);
-        setError(null); 
+          setRoomData(response.data);
+          setError(null); 
         }
       } catch (err) {
         console.error('Error fetching room data:', err);
@@ -33,11 +34,11 @@ function Rooms() {
     fetchRoomData();
   }, [id]);
 
-  const images = [
-    roomData?.photo1?.url || '',
-    roomData?.photo2?.url || '',
-    roomData?.photo3?.url || '',
-  ].filter(Boolean);
+  const images = roomData ? [
+    roomData.allroomdata?.photo1?.url || '',
+    roomData.allroomdata?.photo2?.url || '',
+    roomData.allroomdata?.photo3?.url || '',
+  ].filter(Boolean) : [];
 
   useEffect(() => {
     if (images.length > 0) {
@@ -124,7 +125,7 @@ function Rooms() {
       <div className="max-w-5xl mx-auto">
         {/* Room Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-white mb-2">{roomData.hotelname || 'Luxury Hotel'}</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">{roomData.allroomdata?.hotelname}</h1>
           <div className="flex items-center justify-center mb-2">
             <span className="inline-flex items-center">
               {[1, 2, 3, 4, 5].map((star) => (
@@ -134,7 +135,7 @@ function Rooms() {
             <span className="ml-2 text-sm text-gray-400">Premium Resort</span>
           </div>
           <div className="inline-block bg-[#f0a500]/10 backdrop-blur-sm px-4 py-1.5 rounded-full">
-            <span className="text-[#f0a500] font-medium">{roomData.roomType || 'Luxury Suite'}</span>
+            <span className="text-[#f0a500] font-medium">{roomData.allroomdata?.roomType || 'Luxury Suite'}</span>
           </div>
         </div>
 
@@ -205,7 +206,8 @@ function Rooms() {
             <div className="mt-6 p-6 rounded-xl bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 shadow-lg">
               <h2 className="text-xl font-semibold text-white mb-4">Room Overview</h2>
               <p className="text-gray-300 mb-4">
-                Experience ultimate luxury in our {roomData.roomType || 'Premium Suite'} with breathtaking views and lavish amenities. This meticulously designed space offers the perfect blend of elegance and comfort for an unforgettable stay.
+                {roomData.allroomdata?.description || 
+                  `Experience ultimate luxury in our ${roomData.allroomdata?.roomType || 'Premium Suite'} with breathtaking views and lavish amenities. This meticulously designed space offers the perfect blend of elegance and comfort for an unforgettable stay.`}
               </p>
               <div className="grid grid-cols-2 gap-4 text-sm text-gray-400">
                 <div className="flex items-center gap-2">
@@ -240,7 +242,7 @@ function Rooms() {
               {/* Price */}
               <div className="mb-6 pb-6 border-b border-gray-700">
                 <div className="flex items-baseline">
-                  <span className="text-2xl font-bold text-white">₹{roomData.price || '5,000'}</span>
+                  <span className="text-2xl font-bold text-white">₹{roomData.roomprice}</span>
                   <span className="ml-2 text-sm text-gray-400">/ night</span>
                 </div>
                 <div className="mt-2 flex items-center">

@@ -86,6 +86,7 @@ const BookingPage = () => {
     try {
       const response = await axios.get(
         `${frontend_url}/hotelroutes/roomdetails_related_to_hotel/${id}`
+        , { withCredentials: true }
       );
 
       if (response.status === 200) {
