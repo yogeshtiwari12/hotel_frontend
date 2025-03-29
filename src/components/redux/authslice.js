@@ -33,7 +33,7 @@ export const fetchAllProfiles = createAsyncThunk("auth/fetchAllProfiles", async 
 
 export const fetchhoteldata = createAsyncThunk("auth/fetchhoteldata", async (_, { rejectWithValue }) => {
     try {
-        const response = await axios.get(`http://localhost:4000/hotelroutes/hoteldetail`, {
+        const response = await axios.get(`${frontend_url}/hotelroutes/hoteldetail`, {
             withCredentials: true,
         });
 

@@ -4,17 +4,17 @@ import { frontend_url } from './front';
 import toast from 'react-hot-toast';
 
 function SaveHotel() {
-  const [hotelname, setHotelName] = useState(''); // Changed to hotelname
+  const [hotelname, setHotelName] = useState(''); 
   const [location, setLocation] = useState('');
-  const [total_rooms, setTotalRooms] = useState(''); // Changed to total_rooms
-  const [room_price, setRoomPrice] = useState(''); // Changed to room_price
+  const [total_rooms, setTotalRooms] = useState('');
+  const [room_price, setRoomPrice] = useState(''); 
 
-  const [hotel_image, setHotelImage] = useState(null); // Changed to hotel_image
+  const [hotel_image, setHotelImage] = useState(null); 
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setHotelImage(file); // Updated to setHotelImage
+      setHotelImage(file); 
     }
   };
 
@@ -29,13 +29,13 @@ function SaveHotel() {
 
     try {
       const hotelData = new FormData();
-      hotelData.append('hotelname', hotelname); // Changed to hotelname
+      hotelData.append('hotelname', hotelname); 
       hotelData.append('location', location);
-      hotelData.append('total_rooms', total_rooms); // Changed to total_rooms
-      hotelData.append('room_price', room_price); // Changed to room_price
+      hotelData.append('total_rooms', total_rooms); 
+      hotelData.append('room_price', room_price); 
    
       if (hotel_image) {
-        hotelData.append('hotel_image', hotel_image); // Keep as hotel_image
+        hotelData.append('hotel_image', hotel_image); 
       }
       
       const response = await axios.put(`${frontend_url}/hotelroutes/savehotel`, hotelData, {

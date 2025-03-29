@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, Link } from "react-router-dom";
-import { useAuth } from "../context.js/context";
+
 import { 
   Hotel, 
   Loader2, 
@@ -17,6 +17,7 @@ import {
 import Confetti from "react-confetti";
 import { load } from "@cashfreepayments/cashfree-js";
 import { useSelector } from "react-redux";
+import { frontend_url } from "./front";
 
 const BookingPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -55,7 +56,7 @@ const BookingPage = () => {
 
       if (result.paymentDetails) {
         try {
-          const res = await axios.post("http://localhost:4000/payments/savepayment", {
+          const res = await axios.post(`${frontend_url}/payments/savepayment`, {
             order_id: paymentDetails.order_id,
             cf_order_id: paymentDetails.cf_order_id,
             created_at: paymentDetails.created_at,
@@ -84,7 +85,7 @@ const BookingPage = () => {
   const fetchRoomDetails = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/hotelroutes/roomdetails_related_to_hotel/${id}`
+        `${frontend_url}/hotelroutes/roomdetails_related_to_hotel/${id}`
       );
 
       if (response.status === 200) {
@@ -115,7 +116,7 @@ const BookingPage = () => {
   const confirmBooking = async () => {
     try {
       const bookingResponse = await axios.put(
-        `http://localhost:4000/hotelroutes/booksingleroom/${id}`,
+        `${frontend_url}/hotelroutes/booksingleroom/${id}`,
         { CheckInType: checkInType },
         { withCredentials: true }
       );
@@ -141,7 +142,7 @@ const BookingPage = () => {
 
     try {
       const paymentResponse = await axios.post(
-        "http://localhost:4000/payments/paymentkrdobhaiya",
+        `${frontend_url}/payments/paymentkrdobhaiya`,
         {
           order_amount: roomDetails.roomprice,
           customer_details: {

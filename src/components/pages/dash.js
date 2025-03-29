@@ -15,13 +15,11 @@ import {
   ResponsiveContainer 
 } from 'recharts';
 
-// Circular Progress Bar Component
 const CircularProgressBar = ({ percentage, label }) => {
   const radius = 50;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
-  // Set progress color based on percentage
   const progressColor =
     percentage >= 90
       ? 'text-green-700'

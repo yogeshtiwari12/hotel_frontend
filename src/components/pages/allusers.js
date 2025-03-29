@@ -21,6 +21,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllProfiles } from '../redux/authslice';
 import toast from 'react-hot-toast';
+import { frontend_url } from './front';
 
 const Allusers = () => {
   const { allProfiles, loading2, error2, profile } = useSelector((state) => state.auth);
@@ -67,7 +68,7 @@ const Allusers = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:4000/userroutes/updateuser/${selectedUser._id}`, 
+        `${frontend_url}/userroutes/updateuser/${selectedUser._id}`, 
         updateFormData,
         {
           withCredentials: true,
@@ -89,7 +90,7 @@ const Allusers = () => {
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:4000/userroutes/deleteuser/${id}`,
+        `${frontend_url}/userroutes/deleteuser/${id}`,
         {
           withCredentials: true,
       

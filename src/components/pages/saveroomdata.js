@@ -47,7 +47,6 @@ function Saveroomdata() {
         }
     };
 
-    // Handle image file changes and create previews
     const handleImageChange = (index, file) => {
         if (index === 1) setPhoto1(file);
         else if (index === 2) setPhoto2(file);
@@ -60,7 +59,6 @@ function Saveroomdata() {
                 <h1 className="text-3xl font-bold mb-6 text-center text-[#f0a500]">Save Room Details</h1>
                 
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Hotel Name */}
                     <div>
                         <input
                             type="text"
@@ -72,7 +70,6 @@ function Saveroomdata() {
                         />
                     </div>
 
-                    {/* Room Type */}
                     <div>
                         <input
                             type="text"

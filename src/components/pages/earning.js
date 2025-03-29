@@ -3,6 +3,7 @@ import { Currency, MapPin, Hotel, TrendingUp, Calendar } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context.js/context';
 import { useSelector } from 'react-redux';
+import { frontend_url } from './front';
 
 const Earning = () => {
   const [data, setData] = useState({
@@ -27,7 +28,7 @@ const Earning = () => {
   useEffect(() => {
     const fetchHotelData = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/hotelroutes/hoteldetail', {
+        const response = await axios.get(`${frontend_url}/hotelroutes/hoteldetail`, {
           withCredentials: true,
         });
         setData(response.data);

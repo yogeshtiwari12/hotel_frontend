@@ -5,6 +5,7 @@ import {
   Pencil, Trash2, X, CheckCircle, AlertCircle, Hotel, CalendarDays, 
   BadgeCheck, CreditCard, Users
 } from 'lucide-react';
+import { frontend_url } from './front';
 
 function GetAllBookings() {
   const [bookings, setBookings] = useState([]);
@@ -14,7 +15,6 @@ function GetAllBookings() {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [refresher, setrefresher] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
-  const [filterStatus, setFilterStatus] = useState('all');
 
   useEffect(() => {
     fetchBookings();
@@ -31,7 +31,7 @@ function GetAllBookings() {
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get('http://localhost:4000/hotelroutes/getallbookings', {
+      const response = await axios.get(`${frontend_url}/hotelroutes/getallbookings`, {
         withCredentials: true
       });
       setBookings(response.data.bookings || []);
@@ -44,7 +44,7 @@ function GetAllBookings() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:4000/hotelroutes/deletebooking/${id}`, {
+      const response = await axios.delete(`${frontend_url}/hotelroutes/deletebooking/${id}`, {
         withCredentials: true
       });
       if (response.status) {
@@ -64,7 +64,7 @@ function GetAllBookings() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:4000/userroutes/updatebookinguser/${selectedBooking._id}`,
+        `${frontend_url}/userroutes/updatebookinguser/${selectedBooking._id}`,
         selectedBooking,
         { withCredentials: true }
       );
@@ -91,9 +91,7 @@ function GetAllBookings() {
     booking.user_hotel_name.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  const getTotalRevenue = () => {
-    return filteredBookings.reduce((sum, booking) => sum + Number(booking.total_price), 0);
-  };
+ 
 
   if (loading) return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">

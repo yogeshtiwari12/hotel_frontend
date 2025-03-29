@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { frontend_url } from '../pages/front';
 function Hoteldata() {
   const [hotels, setHotels] = useState([]);
   const [price2, setprice] = useState([]);
@@ -33,10 +34,9 @@ function Hoteldata() {
   useEffect(() => {
     async function fetchHotels() {
       try {
-        const response = await axios.get('http://localhost:4000/hotelroutes/hoteldetail');
+        const response = await axios.get(`${frontend_url}/hotelroutes/hoteldetail`);
         setprice(response);
         setHotels(response.data.hotel);
-        // console.log("hoteldata",response.data);
         setLoading(false);
     
       } catch (error) {
@@ -49,7 +49,7 @@ function Hoteldata() {
 
   const handleDelete = async (hotelId) => {
     try {
-      const response = await axios.delete(`http://localhost:4000/hotelroutes/deleteone/${hotelId}`, {
+      const response = await axios.delete(`${frontend_url}/hotelroutes/deleteone/${hotelId}`, {
         withCredentials: true,
       });
       if (response.status === 200) {
@@ -85,7 +85,7 @@ function Hoteldata() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:4000/hotelroutes/update/${editHotel._id}`,
+        `${frontend_url}/hotelroutes/update/${editHotel._id}`,
         editHotel,
         {
           withCredentials: true,

@@ -144,7 +144,6 @@ function CheckinPage() {
   };
 
   const updateCheckInStatus = async (bookingId, guestName, roomNumber, hotelName) => {
-    // Validate if room number exists before check-in
     if (!roomNumber) {
       Swal.fire({
         title: 'Room Number Required',
