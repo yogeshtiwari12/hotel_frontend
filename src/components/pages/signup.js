@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { frontend_url } from './front';
 
 function Signup() {
   const [email, setEmail] = useState('');
@@ -21,11 +22,11 @@ function Signup() {
     formData.append('name', name);
     formData.append('phone', phone);
     formData.append('role', role);
-    if (photo) formData.append('photo', photo); // Append photo if selected
+    if (photo) formData.append('photo', photo);
 
     try {
       const response = await axios.put(
-        'http://localhost:4000/userroutes/signup',
+       ` ${frontend_url}/userroutes/signup`,
         formData,
         { withCredentials: true,}
       );

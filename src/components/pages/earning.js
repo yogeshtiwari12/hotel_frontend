@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Currency, MapPin, Hotel, TrendingUp, Calendar } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context.js/context';
+import { useSelector } from 'react-redux';
 
 const Earning = () => {
   const [data, setData] = useState({
@@ -12,16 +13,15 @@ const Earning = () => {
   const [error, setError] = useState(null);
   const [selectedHotel, setSelectedHotel] = useState(null);
   const [totalbookings1, setTotalBookings] = useState({ totalbookings: 0 });
-  const { profile } = useAuth();  // Assuming `totalbookings` is fetched from context
+  const { profile } =  useSelector((state) => state.auth);
   
 
-  // Update totalbookings1 when totalbookings changes
   useEffect(() => {
     if(profile && profile.user!==null){
-      setTotalBookings({totalbookings:profile.user});
+      setTotalBookings({totalbookings:profile.user.totalbookings});
       
     }
-  }, [profile]); // Dependency array ensures that we update whenever totalbookings changes
+  }, [profile]); 
 
 
   useEffect(() => {

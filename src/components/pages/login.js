@@ -3,38 +3,48 @@ import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { frontend_url } from './front';
+
 
 function Login() {
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // const [role, setRole] = useState('');
-  const navigate  = useNavigate()
 
-  const handleSubmit = async(e) => {
+  const navigate = useNavigate()
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    try{
-        const response  = await axios.post('http://localhost:4000/userroutes/login',{
-           email,password
-        },{
-           withCredentials: true
-        }
-        )
-        if (response.status===200) {
-            alert("Login successful")
-           toast.success("login success")
-           navigate('/')
-           window.location.reload();
+    try {
+      const response = await axios.post(`${frontend_url}/userroutes/login`, {
 
-        }
+        email, password
+      }, {
+        withCredentials: true
+      }
+      )
+      if (response.status === 200) {
+  
+        toast.success("Login successful!", {
+  
+        });
+  
+
+          navigate('/');
+        window.location.reload();
+
+      }
     }
-    catch(error){
-        toast.error("Invalid credentials")
-        alert("Invalid credentials")
+    catch (error) {
+      toast.error("Invalid credentials")
+      alert("Invalid credentials")
     }
-   
+
   };
 
   return (
+
     <div className="flex items-center justify-center min-h-screen bg-[#1a1a2e]">
       <div className="bg-white bg-opacity-20 backdrop-blur-md rounded-lg shadow-lg p-8 w-96">
         <h2 className="text-2xl font-bold text-center text-[#f0a500] mb-6">Login</h2>
@@ -77,7 +87,7 @@ function Login() {
           </button>
         </form>
         <p className="text-sm text-center text-white mt-4">
-          Don't have an account? 
+          Don't have an account?
           <Link to="/signup" className="text-[#f0a500] hover:underline"> Sign Up</Link>
         </p>
       </div>

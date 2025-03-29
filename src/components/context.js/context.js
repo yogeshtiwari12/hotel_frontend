@@ -1,60 +1,55 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { frontend_url } from "../pages/front";
+import { set } from "js-cookie";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [profile, setProfile] = useState(null); // Holds the logged-in user's profile
-    const [loading, setLoading] = useState(true); // Indicates if profile is being fetched
-    const [error, setError] = useState(null); // Error handling for profile fetch
-    const [isProfile, setIsProfile] = useState(false); // Tracks if a valid profile exists
+    const [profile, setProfile] = useState(null);
+    const [isProfile, setIsProfile] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
- 
     useEffect(() => {
         const fetchMyProfile = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/userroutes/getmyprofile', {
+                const response = await axios.get(`${frontend_url}/userroutes/getmyprofile`, {
                     withCredentials: true,
                 });
-                
 
-                // console.log("single user profile ",response.data)
                 if (response.data?.user) {
                     setProfile(response.data);
-                    setIsProfile(true); // Profile exists
-                } else {
-                    setProfile(null);
-                    setIsProfile(false); // No profile
+                    setIsProfile(true);
                 }
             } catch (error) {
                 console.error("Error fetching profile:", error);
                 setError(error);
                 setProfile(null);
-                setIsProfile(false); // Treat as logged-out
+                setIsProfile(false);
             } finally {
-                setLoading(false); // Loading complete
+                setLoading(false);
             }
         };
 
         fetchMyProfile();
     }, []);
 
-    // Fetch all user profiles
-    const [allProfiles, setAllProfiles] = useState([]); // Holds all user profiles
-    const [loadingAllProfiles, setLoadingAllProfiles] = useState(true); // Indicates if all profiles are being fetched
-    const [errorAllProfiles, setErrorAllProfiles] = useState(null); // Error handling for fetching all profiles
+    const [allProfiles, setAllProfiles] = useState([]);
+    const [usercheckindata, setusercheckindata] = useState([]);
+    const [loadingAllProfiles, setLoadingAllProfiles] = useState(true);
+    const [errorAllProfiles, setErrorAllProfiles] = useState(null);
 
     useEffect(() => {
         const fetchProfiles = async () => {
-            console.log(allProfiles)
             try {
-                const response = await axios.get('http://localhost:4000/userroutes/getallprofiles', {
+                const response = await axios.get(`${frontend_url}/userroutes/getallprofiles`, {
                     withCredentials: true,
                 });
 
-                if (response.data?.allusers) {
-                    // console.log
+                if (response.data) {
                     setAllProfiles(response.data.allusers);
+                    setusercheckindata(response.data.isUSerCheckin);
                 } else {
                     setAllProfiles([]);
                 }
@@ -62,7 +57,7 @@ export const AuthProvider = ({ children }) => {
                 console.error('Error fetching profiles:', error);
                 setErrorAllProfiles(error);
             } finally {
-                setLoadingAllProfiles(false); // Loading complete
+                setLoadingAllProfiles(false);
             }
         };
 
@@ -79,6 +74,7 @@ export const AuthProvider = ({ children }) => {
                 allProfiles,
                 loadingAllProfiles,
                 errorAllProfiles,
+                usercheckindata
             }}
         >
             {children}

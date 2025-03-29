@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { frontend_url } from './front';
+import toast from 'react-hot-toast';
 
 function Saveroomdata() {
     const { id } = useParams(); 
@@ -25,12 +27,13 @@ function Saveroomdata() {
         if (photo3) formData.append('photo3', photo3);
 
         try {
-            const response = await axios.put(`http://localhost:4000/hotelroutes/saveroomdetails/${id}`, formData, {
+            const response = await axios.put(`${frontend_url}/hotelroutes/saveroomdetails/${id}`, formData, {
             
                 withCredentials: true,
             });
             console.log(response.data);
-            alert('Room Details Saved Successfully');
+          
+            toast.success("Room details saved successfully!");
             setHotelname('');
             setRoomType('');
             setDescription('');
@@ -39,7 +42,8 @@ function Saveroomdata() {
             setPhoto3(null);
         } catch (error) {
             console.error('Error saving room details:', error.message);
-            alert(error.message);
+            toast.error("Error saving room details: " + (error.response?.data?.message || error.message));
+
         }
     };
 

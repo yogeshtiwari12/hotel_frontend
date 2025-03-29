@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { frontend_url } from './front';
+import toast from 'react-hot-toast';
 
 function SaveHotel() {
   const [hotelname, setHotelName] = useState(''); // Changed to hotelname
   const [location, setLocation] = useState('');
   const [total_rooms, setTotalRooms] = useState(''); // Changed to total_rooms
   const [room_price, setRoomPrice] = useState(''); // Changed to room_price
-  const [room_no, setRoomNo] = useState(''); // Changed to room_no
+
   const [hotel_image, setHotelImage] = useState(null); // Changed to hotel_image
 
   const handleImageChange = (e) => {
@@ -19,9 +21,9 @@ function SaveHotel() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation
+    
     if (total_rooms <= 0 || room_price <= 0) {
-      alert("Total Rooms and Room Price must be positive numbers.");
+   toast.success("No Room left", )
       return;
     }
 
@@ -31,25 +33,25 @@ function SaveHotel() {
       hotelData.append('location', location);
       hotelData.append('total_rooms', total_rooms); // Changed to total_rooms
       hotelData.append('room_price', room_price); // Changed to room_price
-      hotelData.append('room_no', room_no); // Changed to room_no
+   
       if (hotel_image) {
         hotelData.append('hotel_image', hotel_image); // Keep as hotel_image
       }
       
-      const response = await axios.put('http://localhost:4000/hotelroutes/savehotel', hotelData, {
+      const response = await axios.put(`${frontend_url}/hotelroutes/savehotel`, hotelData, {
      
         withCredentials: true,
       });
 
       if (response.status) {
-        alert("Hotel registered successfully!");
+        toast.success("Hotel registered successfully!", )
         console.log("hotel registered successfully!");
      
         setHotelName('');
         setLocation('');
         setTotalRooms('');
         setRoomPrice('');
-        setRoomNo('');
+     
         setHotelImage(null);
       }
     } catch (error) {
@@ -107,17 +109,7 @@ function SaveHotel() {
               required
             />
           </div>
-          <div className="mb-4">
-            <input
-              type="text"
-              aria-label="Room No"
-              className="w-full p-3 border border-gray-300 rounded placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#f0a500]"
-              placeholder="Room No"
-              value={room_no}
-              onChange={(e) => setRoomNo(e.target.value)} 
-              required
-            />
-          </div>
+         
           <div className="mb-4">
             <input
               type="file"
