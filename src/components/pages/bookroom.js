@@ -34,7 +34,7 @@ const BookingPage = () => {
   let cashfree;
   var initializeSDK = async function () {
     cashfree = await load({
-      mode: "sandbox",//"production"
+      mode: "production",//"production"
     });
   };
   initializeSDK();
