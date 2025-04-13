@@ -146,11 +146,11 @@ const BookingPage = () => {
         `${frontend_url}/payments/paymentkrdobhaiya`,
         {
           order_amount: roomDetails.roomprice,
-          customer_details: {
-            customer_id: profile?.id || "temp_user",
-            customer_name: profile?.name || "temp User",
-            customer_email: profile?.email || "temp@example.com",
-            customer_phone: profile?.phone || "0000000000",
+           customer_details: {
+            customer_id: profile.user?.userid || "temp_user",
+            customer_name: profile.user?.name || "temp User",
+            customer_email: profile.user?.email || "temp@example.com",
+            customer_phone: String(profile.user?.phone) ||"1234567890"
           },
         },
         { withCredentials: true }
