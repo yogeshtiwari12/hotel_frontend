@@ -15,7 +15,6 @@ import {
   ArrowLeft
 } from "lucide-react";
 import Confetti from "react-confetti";
-import { load } from "@cashfreepayments/cashfree-js";
 import { useSelector } from "react-redux";
 import { frontend_url } from "./front";
 
@@ -23,63 +22,53 @@ const BookingPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [roomDetails, setRoomDetails] = useState(null);
   const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState("info"); // "info", "success", "error"
+  const [messageType, setMessageType] = useState("info")
   const [isBooked, setIsBooked] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [checkInType, setCheckInType] = useState("Hotel");
-  const [currentStep, setCurrentStep] = useState(1); // 1: Details, 2: Payment
+  const [currentStep, setCurrentStep] = useState(1); 
   const { id } = useParams();
   const { profile } = useSelector((state) => state.auth);
 
-  let cashfree;
-  var initializeSDK = async function () {
-    cashfree = await load({
-      mode: "sandbox",//"production"
-    });
-  };
-  initializeSDK();
+  const handleRazorpayPayment = async (orderData) => {
+    const options = {
+      key: orderData.key_id,
+      amount: orderData.amount,
+      currency: orderData.currency,
+      name: "Hotel Booking",
+      description: `Booking for ${roomDetails?.hotelname || roomDetails?.allroomdata?.hotelname || "Hotel Room"}`,
+      order_id: orderData.order_id,
 
-  const doPayment = async (payment_session_id, paymentDetails) => {
-    let checkoutOptions = {
-      paymentSessionId: payment_session_id,
-      redirectTarget: "_modal",
-    };
-
-    try {
-      const result = await cashfree.checkout(checkoutOptions);
-      
-      if (result.error) {
-        setMessageType("error");
-        setMessage("Payment failed. Please try again.");
-        return;
-      }
-
-      if (result.paymentDetails) {
+      handler: async function(response) {
         try {
-          const res = await axios.post(`${frontend_url}/payments/savepayment`, {
-            order_id: paymentDetails.order_id,
-            cf_order_id: paymentDetails.cf_order_id,
-            created_at: paymentDetails.created_at,
-            order_expiry_time: paymentDetails.order_expiry_time,
-            order_amount: paymentDetails.order_amount,
-            order_currency: paymentDetails.order_currency,
-            customer_details: paymentDetails.customer_details,
+          const verifyResponse = await axios.post(`${frontend_url}/payments/razorpay/verify`, {
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            amount: orderData.amount,
+            notes: orderData.notes  
           });
-
-          if (res.data) {
+          
+          if (verifyResponse.data) {
             setMessageType("success");
             setMessage("Payment processed successfully!");
             await confirmBooking();
           }
         } catch (error) {
           setMessageType("error");
-          setMessage("Error saving payment details.");
+          setMessage("Error verifying payment. Please contact support.");
         }
-      }
-    } catch (error) {
-      setMessageType("error");
-      setMessage("Payment processing failed. Please try again.");
-    }
+      },
+      prefill: {
+        name: orderData.notes.customer_name,
+        email: orderData.notes.customer_email,
+        contact: orderData.notes.customer_phone
+      },
+   
+    };
+
+    const razorpayInstance = new window.Razorpay(options);
+    razorpayInstance.open();
   };
 
   const fetchRoomDetails = async () => {
@@ -103,6 +92,16 @@ const BookingPage = () => {
 
   useEffect(() => {
     fetchRoomDetails();
+    
+    // Load Razorpay script
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    document.body.appendChild(script);
+    
+    return () => {
+      document.body.removeChild(script);
+    };
   }, [id]);
 
   useEffect(() => {
@@ -138,36 +137,32 @@ const BookingPage = () => {
   };
 
   const handlePayment = async () => {
-    setMessage("");
     setIsLoading(true);
 
     try {
-      const paymentResponse = await axios.post(
-        `${frontend_url}/payments/paymentkrdobhaiya`,
+      const priceToCharge = roomDetails.roomprice;
+      const response = await axios.post(
+        `${frontend_url}/payments/razorpay/createorder`,
         {
-          order_amount: roomDetails.roomprice,
+          order_amount: priceToCharge,
           customer_details: {
-            customer_id: profile?.id || "temp_user",
-            customer_name: profile?.name || "temp User",
-            customer_email: profile?.email || "temp@example.com",
-            customer_phone: profile?.phone || "0000000000",
+            customer_id: profile?.userid || "guest_user",
+            customer_name: profile?.user?.name || "Guest User",
+            customer_email: profile?.user?.email || "guest@example.com",
+            customer_phone: profile.user.phone,
           },
-        },
-        { withCredentials: true }
+        }
       );
-
-      const paymentSessionId = paymentResponse.data?.payment_session_id?.trim();
-      const paymentDetails = paymentResponse.data?.res;
-      console.log("Payment Details:", paymentSessionId);
-
-      if (paymentSessionId) {
-        await doPayment(paymentSessionId, paymentDetails);
+      if (response.data.order_id) {
+        await handleRazorpayPayment(response.data);
+        console.log(response.data);
       } else {
-        throw new Error("Payment session ID not found");
+        setMessageType("error");
+        setMessage("Failed to initiate Razorpay payment.");
       }
     } catch (error) {
       setMessageType("error");
-      setMessage(error.response?.data?.message || "Error processing payment");
+      setMessage("Payment initialization failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -234,7 +229,6 @@ const BookingPage = () => {
           <div className="p-8 space-y-6">
             {roomDetails ? (
               <>
-                {/* Progress Steps */}
                 <div className="flex justify-center mb-8">
                   <div className="flex items-center space-x-4">
                     <div className={`flex items-center justify-center w-8 h-8 rounded-full ${
@@ -305,14 +299,11 @@ const BookingPage = () => {
                     </div>
                   </div>
                 </div>
-
-                {/* Payment Security Notice */}
                 <div className="flex items-center gap-2 text-sm text-gray-400 justify-center">
                   <Shield className="h-4 w-4" />
-                  <span>Secure payment powered by Cashfree</span>
+                  <span>Secure payment powered by Razorpay</span>
                 </div>
 
-                {/* Action Button */}
                 {!isBooked ? (
                   <button 
                     onClick={handlePayment}
@@ -340,7 +331,6 @@ const BookingPage = () => {
                   </div>
                 )}
 
-                {/* Message Display */}
                 {message && <MessageDisplay type={messageType} message={message} />}
               </>
             ) : (

@@ -34,7 +34,7 @@ function Layout() {
     dispatch(fetchProfile());
   }, [dispatch]);
 
-  const isAuth = useMemo(() => {
+  const isAuth = useMemo(() => { 
     return isAuthenticated && isProfile && !!profile;
   }, [isAuthenticated, isProfile, profile]);
 
