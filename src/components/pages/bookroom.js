@@ -154,6 +154,7 @@ const BookingPage = () => {
         }
       );
       if (response.data.order_id) {
+        console.log(response.data)
         await handleRazorpayPayment(response.data);
         console.log(response.data);
       } else {
