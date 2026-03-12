@@ -9,7 +9,6 @@ function Signup() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [role, setRole] = useState('');
   const [photo, setPhoto] = useState(null); // For the file itself
   const [photoPreview, setPhotoPreview] = useState(''); // For the photo preview URL
   const navigate = useNavigate();
@@ -21,7 +20,6 @@ function Signup() {
     formData.append('password', password);
     formData.append('name', name);
     formData.append('phone', phone);
-    formData.append('role', role);
     if (photo) formData.append('photo', photo);
 
     try {
@@ -101,18 +99,6 @@ function Signup() {
               onChange={(e) => setPhone(e.target.value)}
               required
             />
-          </div>
-          <div className="mb-4">
-            <select
-              className="w-full p-2 border border-gray-300 rounded placeholder-gray-500 focus:outline-none"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              required
-            >
-              <option value="">Select role</option>
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
           </div>
           <div className="mb-4 bg-blue">
             <input
