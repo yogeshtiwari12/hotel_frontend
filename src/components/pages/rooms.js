@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Wifi, BedDouble, Wind, Coffee, Tv, Bath, Star, Navigation, ArrowLeft, ArrowRight } from 'lucide-react';
 import { frontend_url } from './front';
-import toast from 'react-hot-toast';
 
 function Rooms() {
   const [roomData, setRoomData] = useState(null);
@@ -34,11 +33,11 @@ function Rooms() {
     fetchRoomData();
   }, [id]);
 
-  const images = roomData ? [
+  const images = useMemo(() => roomData ? [
     roomData.allroomdata?.photo1?.url || '',
     roomData.allroomdata?.photo2?.url || '',
     roomData.allroomdata?.photo3?.url || '',
-  ].filter(Boolean) : [];
+  ].filter(Boolean) : [], [roomData]);
 
   useEffect(() => {
     if (images.length > 0) {

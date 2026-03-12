@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaHotel, FaUsers, FaEdit, FaTrash, FaClipboardList, FaBookmark, FaBars, FaTimes, FaChartLine, FaMoneyBillWave, FaCalendarAlt, FaUserCheck, FaStar, FaBed, FaClock, FaArrowUp, FaArrowDown, FaEllipsisH } from 'react-icons/fa';
+import { FaUsers, FaEdit, FaTrash, FaClipboardList, FaBookmark, FaBars, FaTimes, FaChartLine, FaMoneyBillWave, FaCalendarAlt, FaUserCheck, FaBed, FaClock, FaArrowUp, FaEllipsisH } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';

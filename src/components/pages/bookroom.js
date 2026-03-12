@@ -3,7 +3,6 @@ import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 
 import { 
-  Hotel, 
   Loader2, 
   CheckCircle, 
   Clock, 
@@ -26,7 +25,7 @@ const BookingPage = () => {
   const [isBooked, setIsBooked] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [checkInType, setCheckInType] = useState("Hotel");
-  const [currentStep, setCurrentStep] = useState(1); 
+  const [currentStep] = useState(1); 
   const { id } = useParams();
   const { profile } = useSelector((state) => state.auth);
 
@@ -50,11 +49,13 @@ const BookingPage = () => {
           });
           
           if (verifyResponse.data) {
+            console.log("Payment verification response:", verifyResponse.data);
             setMessageType("success");
             setMessage("Payment processed successfully!");
             await confirmBooking();
           }
         } catch (error) {
+          console.error("Payment verification error:", error);
           setMessageType("error");
           setMessage("Error verifying payment. Please contact support.");
         }
@@ -71,29 +72,28 @@ const BookingPage = () => {
     razorpayInstance.open();
   };
 
-  const fetchRoomDetails = async () => {
-    try {
-      const response = await axios.get(
-        `${frontend_url}/hotelroutes/roomdetails_related_to_hotel/${id}`
-        , { withCredentials: true }
-      );
-
-      if (response.status === 200) {
-        setRoomDetails(response.data);
-      } else {
-        setMessageType("error");
-        setMessage("Failed to fetch room details.");
-      }
-    } catch (error) {
-      setMessageType("error");
-      setMessage("Error fetching room details.");
-    }
-  };
-
   useEffect(() => {
+    const fetchRoomDetails = async () => {
+      try {
+        const response = await axios.get(
+          `${frontend_url}/hotelroutes/roomdetails_related_to_hotel/${id}`
+          , { withCredentials: true }
+        );
+
+        if (response.status === 200) {
+          setRoomDetails(response.data);
+        } else {
+          setMessageType("error");
+          setMessage("Failed to fetch room details.");
+        }
+      } catch (error) {
+        setMessageType("error");
+        setMessage("Error fetching room details.");
+      }
+    };
+
     fetchRoomDetails();
     
-    // Load Razorpay script
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     script.async = true;

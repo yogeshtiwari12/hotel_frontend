@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { 
   Calendar, Mail, Phone, Home, Hash, DollarSign, User, Clock, Search, 
-  Pencil, Trash2, X, CheckCircle, AlertCircle, Hotel, CalendarDays, 
-  BadgeCheck, CreditCard, Users
+  Pencil, Trash2, X, CheckCircle, AlertCircle, Hotel, 
+  BadgeCheck
 } from 'lucide-react';
 import { frontend_url } from './front';
 

@@ -4,8 +4,6 @@ import {
   IndianRupee, 
   Hotel, 
   Loader2, 
-  Search,
-  Plus,
   Star,
   Trash2,
   Edit2,
@@ -17,11 +15,11 @@ import toast from 'react-hot-toast';
 import { frontend_url } from '../pages/front';
 function Hoteldata() {
   const [hotels, setHotels] = useState([]);
-  const [price2, setprice] = useState([]);
+
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
   const [editHotel, setEditHotel] = useState({
     _id: '',
@@ -37,7 +35,6 @@ function Hoteldata() {
         const response = await axios.get(`${frontend_url}/hotelroutes/hoteldetail`,{
           withCredentials: true,
         });
-        setprice(response);
         setHotels(response.data.hotel);
         setLoading(false);
     
@@ -77,6 +74,7 @@ function Hoteldata() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    
     setEditHotel((prev) => ({
       ...prev,
       [name]: value,

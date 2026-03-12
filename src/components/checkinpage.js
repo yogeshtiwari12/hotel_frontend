@@ -21,11 +21,11 @@ import {
   RefreshCw
 } from "lucide-react";
 import { frontend_url } from "./pages/front";
-import { useSelector } from "react-redux";
+
 import toast from "react-hot-toast";
 
 function CheckinPage() {
-  const { id } = useParams();
+  useParams();
   const [bookings, setBookings] = useState([]);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
@@ -45,7 +45,6 @@ function CheckinPage() {
      
         if (response.status === 200) {
           setBookings(response.data.data);
-       console.log("response",bookings.map((booking) => booking.id))
 
         
           const initialRoomInputs = {};

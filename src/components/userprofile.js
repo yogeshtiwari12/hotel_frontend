@@ -7,7 +7,6 @@ import {
   FiMail, 
   FiPhone, 
   FiCheckCircle, 
-  FiXCircle,
   FiClock,
   FiBell
 } from 'react-icons/fi';
@@ -17,7 +16,7 @@ import { motion } from 'framer-motion';
 function UserProfile() {
   const { profile } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('all');
+  const [activeTab] = useState('all');
 
   useEffect(() => {
     setLoading(false);

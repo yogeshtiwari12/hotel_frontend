@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProfile } from "./components/redux/authslice";
 
-import {Navbar,NavbarWrapper} from "./components/navbar.js";
+import {Navbar} from "./components/navbar.js";
 import Home from "./components/pages/home.js";
 import Login from "./components/pages/login.js";
 import Signup from "./components/pages/signup.js";
@@ -21,13 +21,13 @@ import Dash from "./components/pages/dash.js";
 import Checkinpage from "./components/checkinpage.js";
 import About from "./components/pages/about.js";
 import ErrorPage from "./components/pages/errorpgae.js";
-import Loading from "./components/pages/loading.js";
+
 import Service from "./components/pages/service.js";
 import { Toaster } from "react-hot-toast";
 
 function Layout() {
   const dispatch = useDispatch();
-  const { isAuthenticated, profile, isProfile, loading } = useSelector((state) => state.auth);
+  const { isAuthenticated, profile, isProfile } = useSelector((state) => state.auth);
 
 
   useEffect(() => {
