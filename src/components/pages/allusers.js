@@ -24,7 +24,7 @@ import toast from 'react-hot-toast';
 import { frontend_url } from './front';
 
 const Allusers = () => {
-  const { allProfiles, loading2, error2, profile } = useSelector((state) => state.auth);
+  const { allProfiles, loadingAllProfiles, errorAllProfiles, profile } = useSelector((state) => state.auth);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRole, setSelectedRole] = useState('all');
   const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -45,13 +45,18 @@ const Allusers = () => {
   const [message, setMessage] = useState({ type: '', text: '' });
   const adminProfile = profile;
 
-  const filteredProfiles = allProfiles.allusers?.filter((profile) => {
+  const filteredProfiles = allProfiles?.filter((profile) => {
     const matchesSearch =
       profile.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       profile.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = selectedRole === 'all' || profile.role.toLowerCase() === selectedRole;
     return matchesSearch && matchesRole;
   }) || [];
+  
+const [hookdata,sethookdata] = useState([]);
+  useEffect(()=>{
+    sethookdata(filteredProfiles);
+  },[filteredProfiles])   
 
   const handleUpdate = (user) => {
     if (!user) return;
@@ -109,7 +114,7 @@ toast.error('Error deleting user');
   };
 
 
-  if (loading2) {
+  if (loadingAllProfiles) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
         <div className="text-center">
@@ -120,12 +125,12 @@ toast.error('Error deleting user');
     );
   }
 
-  if (error2) {
+  if (errorAllProfiles) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
         <div className="text-center text-red-400 p-8 rounded-xl bg-red-500/10 backdrop-blur-sm border border-red-500/20">
           <AlertCircle className="mx-auto mb-4" size={48} />
-          <p className="text-xl">Error loading profiles: {error2}</p>
+          <p className="text-xl">Error loading profiles: {errorAllProfiles?.message || String(errorAllProfiles)}</p>
         </div>
       </div>
     );

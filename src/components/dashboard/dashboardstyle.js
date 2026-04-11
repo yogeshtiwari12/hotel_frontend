@@ -17,7 +17,7 @@ import {
   Filler
 } from 'chart.js';
 import { motion } from 'framer-motion';
-import { fetchhoteldata } from '../redux/authslice';
+import { fetchAllProfiles, fetchhoteldata } from '../redux/authslice';
 
 ChartJS.register(
   CategoryScale,
@@ -33,21 +33,25 @@ ChartJS.register(
 );
 
 function DashboardStyle() {  
-  const { profile } = useSelector((state) => state.auth);
+  const { profile, hoteldata, totalBookings, checkedInCount, total_users  } = useSelector((state) => state.auth);
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('');
-
+console.log("user", total_users );  
 
   const dispatch = useDispatch();
-  const hoteldata = useSelector((state) => state.auth.hoteldata);
 
   useEffect(() => {
     dispatch(fetchhoteldata());
+    dispatch(fetchAllProfiles());
   }, [dispatch]); 
 
-  console.log("dd", hoteldata);
-
+  console.log("hoteldata", hoteldata);  
+  const revenueValue = typeof hoteldata === 'number' ? hoteldata : Number(hoteldata) || 0;
+  const bookingCountValue = typeof totalBookings === 'number' ? totalBookings : Number(totalBookings) || 0;
+  const checkedInCountValue = typeof checkedInCount === 'number' ? checkedInCount : Number(checkedInCount) || 0;
+  const totalUsersValue = typeof total_users === 'number' ? total_users : Number(total_users) || 0;
+  console.log("users", totalUsersValue);
 
 
   const navItems = [
@@ -301,7 +305,7 @@ function DashboardStyle() {
                 </div>
                 <h3 className="text-gray-500 text-sm font-medium mb-2">Total Revenue</h3>
                 <div className="flex items-end space-x-1">
-                  <span className="text-2xl font-bold text-[#003366]">₹{hoteldata}</span>
+                  <span className="text-2xl font-bold text-[#003366]">₹{revenueValue}</span>
                   <span className="text-gray-400 text-sm mb-1">this month</span>
                 </div>
               </motion.div>
@@ -321,7 +325,7 @@ function DashboardStyle() {
                 </div>
                 <h3 className="text-gray-500 text-sm font-medium mb-2">Total Bookings</h3>
                 <div className="flex items-end space-x-1">
-                  <span className="text-2xl font-bold text-[#f0a500]">1,234</span>
+                  <span className="text-2xl font-bold text-[#f0a500]">{bookingCountValue}</span>
                   <span className="text-gray-400 text-sm mb-1">bookings</span>
                 </div>
               </motion.div>
@@ -341,7 +345,7 @@ function DashboardStyle() {
                 </div>
                 <h3 className="text-gray-500 text-sm font-medium mb-2">Total Users</h3>
                 <div className="flex items-end space-x-1">
-                  <span className="text-2xl font-bold text-[#003366]">5,678</span>
+                  <span className="text-2xl font-bold text-[#003366]">{totalUsersValue}</span>
                   <span className="text-gray-400 text-sm mb-1">users</span>
                 </div>
               </motion.div>
@@ -361,8 +365,8 @@ function DashboardStyle() {
                 </div>
                 <h3 className="text-gray-500 text-sm font-medium mb-2">Occupancy Rate</h3>
                 <div className="flex items-end space-x-1">
-                  <span className="text-2xl font-bold text-[#f0a500]">85%</span>
-                  <span className="text-gray-400 text-sm mb-1">occupied</span>
+                  <span className="text-2xl font-bold text-[#f0a500]">{checkedInCountValue}</span>
+                  <span className="text-gray-400 text-sm mb-1">checked in</span>
                 </div>
               </motion.div>
             </div>
