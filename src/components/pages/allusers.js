@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { 
   Mail, 
   Phone, 
@@ -45,18 +45,15 @@ const Allusers = () => {
   const [message, setMessage] = useState({ type: '', text: '' });
   const adminProfile = profile;
 
-  const filteredProfiles = allProfiles?.filter((profile) => {
-    const matchesSearch =
-      profile.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      profile.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = selectedRole === 'all' || profile.role.toLowerCase() === selectedRole;
-    return matchesSearch && matchesRole;
-  }) || [];
-  
-const [hookdata,sethookdata] = useState([]);
-  useEffect(()=>{
-    sethookdata(filteredProfiles);
-  },[filteredProfiles])   
+  const filteredProfiles = useMemo(() => {
+    return allProfiles?.filter((profile) => {
+      const matchesSearch =
+        profile.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        profile.email.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesRole = selectedRole === 'all' || profile.role.toLowerCase() === selectedRole;
+      return matchesSearch && matchesRole;
+    }) || [];
+  }, [allProfiles, searchTerm, selectedRole]);
 
   const handleUpdate = (user) => {
     if (!user) return;
