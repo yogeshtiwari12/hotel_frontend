@@ -77,7 +77,7 @@ function Navbar() {
       <div className="fixed top-0 left-0 right-0 z-50 w-full bg-[#1a1a2e] shadow-lg">
         <div className="mx-auto flex h-[70px] max-w-8xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="text-md font-bold text-white text-2xl">
-            <h3>Hotel<span className="text-2xl text-[#f0a500]">Dekho</span></h3>
+            <h3>BookYour<span className="text-2xl text-[#f0a500]">Stay</span></h3>
           </div>
 
           {/* Desktop Links */} 
