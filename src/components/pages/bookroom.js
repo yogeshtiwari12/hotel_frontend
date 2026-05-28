@@ -136,6 +136,7 @@ const BookingPage = () => {
     }
   };
 
+  
   const handlePayment = async () => {
     setIsLoading(true);
 
